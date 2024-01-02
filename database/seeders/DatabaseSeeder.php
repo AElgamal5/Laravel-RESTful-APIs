@@ -18,5 +18,13 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+
+        // $this->call([
+        //     CustomerSeeder::class
+        // ]);
+        \App\Models\Customer::factory()->count(25)->hasInvoices(10)->create();
+        \App\Models\Customer::factory()->count(100)->hasInvoices(5)->create();
+        \App\Models\Customer::factory()->count(100)->hasInvoices(3)->create();
+        \App\Models\Customer::factory()->count(5)->create();
     }
 }
