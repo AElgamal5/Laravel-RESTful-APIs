@@ -9,23 +9,28 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\v1\CustomerResource;
 use App\Http\Resources\v1\CustomerCollection;
 use Illuminate\Http\Request;
+use App\Filters\v1\CustomerFilter;
 
 class CustomerController extends Controller
 {
     /**
      * Display a listing of the resource.
+     * filtering form: column[operator]=value
      */
     public function index(Request $request)
     {
-        // dd($request);
-        $filter = new CustomerQuery();
-        $query = $filter->transform($request); // [[col, op, value]]
+        $filter = new CustomerFilter();
+        $filterItems = $filter->transform($request); // [[col, op, value]]
 
-        if (count($query) == 0) {
-            return new CustomerCollection(Customer::paginate());
-        } else {
-            return new CustomerCollection(Customer::where($query)->paginate());
+        $includeInvoices = $request->query("includeInvoices");
+
+        $customers = Customer::where($filterItems);
+
+        if ($includeInvoices === "true") {
+            $customers = $customers->with('invoices');
         }
+
+        return new CustomerCollection($customers->paginate()->appends($request->query()));
     }
 
     /**
@@ -47,9 +52,16 @@ class CustomerController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Customer $customer)
+    public function show(Request $request, Customer $customer)
     {
         // return $customer;
+
+        $includeInvoices = $request->query("includeInvoices");
+
+        if ($includeInvoices === "true") {
+            return new CustomerResource($customer->loadMissing('invoices'));
+        }
+
         return new CustomerResource($customer);
     }
 
