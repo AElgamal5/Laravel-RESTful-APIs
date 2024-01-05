@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\v1;
 
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -12,7 +12,9 @@ class UpdateCustomerRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        $user = $this->user();
+
+        return $user != null && $user->tokenCan('update');
     }
 
     /**
@@ -51,8 +53,10 @@ class UpdateCustomerRequest extends FormRequest
 
     protected function prepareForValidation()
     {
-        $this->merge([
-            'postal_code' => $this->postalCode,
-        ]);
+        if ($this->method() == 'PUT') {
+            $this->merge([
+                'postal_code' => $this->postalCode,
+            ]);
+        }
     }
 }

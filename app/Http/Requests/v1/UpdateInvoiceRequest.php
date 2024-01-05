@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\v1;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -11,7 +11,8 @@ class UpdateInvoiceRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        $user = $this->user();
+        return $user != null && $user->tokenCan('update');
     }
 
     /**
