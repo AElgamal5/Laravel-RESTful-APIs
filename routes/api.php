@@ -27,7 +27,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //test api
 Route::get('/', function (Request $request) {
     return response()->json([
-        'msg' => "بسم الله الرحمن الرحيم"
+        'msg' => "بِسْمِ اللَّـهِ الرَّحْمَـٰنِ الرَّحِيمِ"
     ]);
 });
 
