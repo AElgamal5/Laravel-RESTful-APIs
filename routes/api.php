@@ -24,6 +24,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+//test api
+Route::get('/', function (Request $request) {
+    return response()->json([
+        'msg' => "بِسْمِ اللَّـهِ الرَّحْمَـٰنِ الرَّحِيمِ"
+    ]);
+});
+
 //v1 routes
 
 Route::group(['prefix' => 'v1', 'middleware' => 'auth:sanctum'], function () {
